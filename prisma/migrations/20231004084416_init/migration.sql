@@ -14,6 +14,17 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
+CREATE TABLE "AuthToken" (
+    "id" SERIAL NOT NULL,
+    "token" TEXT NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "AuthToken_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Enrollment" (
     "id" SERIAL NOT NULL,
     "courseId" INTEGER NOT NULL,
@@ -58,6 +69,9 @@ CREATE TABLE "QRCode" (
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "AuthToken_token_key" ON "AuthToken"("token");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Course_code_key" ON "Course"("code");
 
 -- CreateIndex
@@ -65,6 +79,9 @@ CREATE UNIQUE INDEX "QRCode_code_key" ON "QRCode"("code");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "QRCode_courseId_key" ON "QRCode"("courseId");
+
+-- AddForeignKey
+ALTER TABLE "AuthToken" ADD CONSTRAINT "AuthToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Enrollment" ADD CONSTRAINT "Enrollment_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

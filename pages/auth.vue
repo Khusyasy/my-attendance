@@ -3,10 +3,15 @@
     <h1>
       AUTH
     </h1>
-    <input type="text" name="username" id="username" v-model="username">
-    <input type="password" name="password" id="password" v-model="password">
-    <button type="submit" @click="login">
-      login
+    <div>
+      <input type="text" name="username" id="username" v-model="username">
+      <input type="password" name="password" id="password" v-model="password">
+      <button @click="login">
+        login
+      </button>
+    </div>
+    <button @click="logout">
+      logout
     </button>
   </div>
 </template>
@@ -22,6 +27,14 @@ const login = () => {
       username: username.value,
       password: password.value
     }
+  })
+
+  console.log(data)
+}
+
+const logout = () => {
+  const { data } = useFetch('/api/auth/logout', {
+    method: 'DELETE'
   })
 
   console.log(data)

@@ -67,7 +67,12 @@ export default defineEventHandler(async (event) => {
 
   const jwtToken = createJwtToken(user.id)
 
-  // save to database
+  const authToken = await prisma.authToken.create({
+    data: {
+      userId: user.id,
+      token: jwtToken,
+    },
+  })
 
   setCookie(event, "jwt", jwtToken)
 
