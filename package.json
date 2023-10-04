@@ -16,6 +16,7 @@
     "@faker-js/faker": "^8.1.0",
     "@nuxt/devtools": "latest",
     "@types/bcrypt": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.3",
     "@types/node": "^20.8.2",
     "nuxt": "^3.7.4",
     "prisma": "^5.3.1",
@@ -26,6 +27,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.3.1",
-    "bcrypt": "^5.1.1"
+    "bcrypt": "^5.1.1",
+    "jsonwebtoken": "^9.0.2"
   }
 }
