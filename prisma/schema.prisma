@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+model User {
+  id         Int          @id @default(autoincrement())
+  name       String
+  username   String
+  password   String
+  role       UserRole     @default(STUDENT)
+  Attendance Attendance[]
+  Course     Course[]
+}
+
+model Course {
+  id         Int          @id @default(autoincrement())
+  code       String       @unique
+  name       String
+  startTime  DateTime // start hour
+  endTime    DateTime // end hour
+  teacherId  Int
+  teacher    User         @relation(fields: [teacherId], references: [id])
+  QRCode     QRCode?
+  Attendance Attendance[]
+}
+
+model Attendance {
+  id       Int      @id @default(autoincrement())
+  date     DateTime
+  courseId Int
+  course   Course   @relation(fields: [courseId], references: [id])
+  userId   Int
+  user     User     @relation(fields: [userId], references: [id])
+}
+
+model QRCode {
+  id         Int      @id @default(autoincrement())
+  code       String   @unique
+  courseId   Int      @unique
+  course     Course   @relation(fields: [courseId], references: [id])
+  expiration DateTime @default(now())
+}
