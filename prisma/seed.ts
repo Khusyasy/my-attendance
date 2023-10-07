@@ -1,4 +1,4 @@
-import { PrismaClient, UserRole } from '@prisma/client'
+import { Day, PrismaClient, UserRole } from '@prisma/client'
 const prisma = new PrismaClient()
 
 import bcrypt from 'bcrypt'
@@ -25,6 +25,8 @@ function genName() {
 async function main() {
   console.log('Clearing database...')
   await prisma.enrollment.deleteMany()
+  await prisma.classSchedule.deleteMany()
+  await prisma.class.deleteMany()
   await prisma.course.deleteMany()
   await prisma.user.deleteMany()
 
@@ -103,32 +105,66 @@ async function main() {
     })
   )
 
+//   model Couse {
+//   id    Int     @id @default(autoincrement())
+//   code  String  @unique
+//   name  String
+//   Class Class[]
+// }
   console.log('Creating dummy courses...')
   const courses = await Promise.all(
-    Array.from({ length: 10 }).map(async () => {
+    Array.from({ length: 3 }).map(async () => {
       const name = faker.lorem.words(3)
-      const time = faker.date.future()
       return await prisma.course.create({
         data: {
           code: name.split(' ').map((w) => w[0]).join(''),
           name,
-          startTime: time,
-          endTime: new Date(time.setHours(time.getHours() + 3)),
-          teacherId: teacher.id,
         },
       })
     })
   )
 
+  console.log('Creating dummy classes...')
+  const classes = await Promise.all(
+    Array.from({ length: 10 }).map(async () => {
+      const course = faker.helpers.arrayElement(courses);
+      return await prisma.class.create({
+        data: {
+          courseId: course.id,
+          teacherId: teacher.id,
+          name: `${course.code} ${faker.string.numeric(2)}`,
+        },
+      })
+    })
+  )
+
+  // dummy schedule, each class have 16 week of schedule, each on the same day of week and hours
+  console.log('Creating dummy schedules...')
+  classes.forEach(async (c) => {
+    for (let i = 0; i < 16; i++) {
+      const day = faker.helpers.arrayElement(Object.values(Day))
+      const startTime = new Date()
+      const endTime = new Date(startTime.setHours(startTime.getHours() + 2))
+      await prisma.classSchedule.create({
+        data: {
+          classId: c.id,
+          day,
+          startTime,
+          endTime,
+        },
+      })
+    }
+  })
+
   console.log('Creating dummy enrollments...')
   await Promise.all(
     students.map(async (student) => {
       for (let i = 0; i < 4; i++) {
-        const course = faker.helpers.arrayElement(courses)
+        const c = faker.helpers.arrayElement(classes)
         await prisma.enrollment.create({
           data: {
             userId: student.id,
-            courseId: course.id,
+            classId: c.id,
           },
         })
       }

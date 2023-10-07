@@ -22,10 +22,9 @@ model User {
   name       String
   password   String
   role       UserRole     @default(STUDENT)
-  courseId   Int?
-  Attendance Attendance[]
-  Course     Course[]
   Enrollment Enrollment[]
+  Attendance Attendance[]
+  Class      Class[]
   AuthToken  AuthToken[]
 }
 
@@ -39,39 +38,59 @@ model AuthToken {
 }
 
 model Enrollment {
-  id       Int    @id @default(autoincrement())
-  courseId Int
-  course   Course @relation(fields: [courseId], references: [id])
-  userId   Int
-  user     User   @relation(fields: [userId], references: [id])
+  id      Int   @id @default(autoincrement())
+  classId Int
+  class   Class @relation(fields: [classId], references: [id])
+  userId  Int
+  user    User  @relation(fields: [userId], references: [id])
 }
 
 model Course {
-  id         Int          @id @default(autoincrement())
-  code       String       @unique
-  name       String
-  startTime  DateTime // start hour
-  endTime    DateTime // end hour
-  teacherId  Int
-  teacher    User         @relation(fields: [teacherId], references: [id])
-  QRCode     QRCode?
-  Attendance Attendance[]
-  Enrollment Enrollment[]
+  id    Int     @id @default(autoincrement())
+  code  String  @unique
+  name  String
+  Class Class[]
+}
+
+model Class {
+  id            Int             @id @default(autoincrement())
+  courseId      Int
+  course        Course          @relation(fields: [courseId], references: [id])
+  name          String
+  teacherId     Int
+  teacher       User            @relation(fields: [teacherId], references: [id])
+  Enrollment    Enrollment[]
+  ClassSchedule ClassSchedule[]
+}
+
+enum Day {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SUNDAY
+  SATURDAY
+}
+
+model ClassSchedule {
+  id           Int          @id @default(autoincrement())
+  classId      Int
+  class        Class        @relation(fields: [classId], references: [id])
+  day          Day
+  startTime    DateTime
+  endTime      DateTime
+  QRCode       String?
+  QRCodeExpire DateTime?
+  Attendance   Attendance[]
 }
 
 model Attendance {
-  id       Int      @id @default(autoincrement())
-  date     DateTime
-  courseId Int
-  course   Course   @relation(fields: [courseId], references: [id])
-  userId   Int
-  user     User     @relation(fields: [userId], references: [id])
-}
-
-model QRCode {
-  id         Int      @id @default(autoincrement())
-  code       String   @unique
-  courseId   Int      @unique
-  course     Course   @relation(fields: [courseId], references: [id])
-  expiration DateTime @default(now())
+  id              Int           @id @default(autoincrement())
+  date            DateTime
+  userId          Int
+  user            User          @relation(fields: [userId], references: [id])
+  QRCode          String
+  classScheduleId Int
+  classSchedule   ClassSchedule @relation(fields: [classScheduleId], references: [id])
 }
