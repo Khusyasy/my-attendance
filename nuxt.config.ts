@@ -3,7 +3,7 @@ import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
-    modules: [
+  modules: [
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
         // @ts-expect-error
@@ -11,6 +11,7 @@ export default defineNuxtConfig({
       })
     },
   ],
+  plugins: ['~/plugins/vuetify.ts','~/plugins/vee-validate.ts'],
   vite: {
     vue: {
       template: {

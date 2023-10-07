@@ -1,43 +1,61 @@
 <template>
-  <div>
-    <h1>
-      AUTH
-    </h1>
-    <div>
-      <input type="text" name="username" id="username" v-model="username">
-      <input type="password" name="password" id="password" v-model="password">
-      <button @click="login">
-        login
-      </button>
-    </div>
-    <button @click="logout">
+  <v-container>
+    <form @submit.prevent="submit">
+      <v-text-field v-model="username.value.value" :error-messages="username.errorMessage.value" label="Username"
+        name="username" required></v-text-field>
+
+      <v-text-field v-model="password.value.value" :error-messages="password.errorMessage.value" label="Password"
+        name="password" required type="password"></v-text-field>
+
+      <v-btn class="me-4" type="submit">
+        submit
+      </v-btn>
+    </form>
+    <v-btn @click="logout">
       logout
-    </button>
-  </div>
+    </v-btn>
+  </v-container>
 </template>
 
 <script setup lang="ts">
-const username = ref('')
-const password = ref('')
+import { useField, useForm } from 'vee-validate'
 
-const login = () => {
-  const { data } = useFetch('/api/auth/login', {
-    method: 'POST',
-    body: {
-      username: username.value,
-      password: password.value
+const { handleSubmit } = useForm({
+  validationSchema: {
+    username: {
+      required: true,
+    },
+    password: {
+      required: true,
     }
+  }
+})
+const username = useField('username')
+const password = useField('password')
+
+const submit = handleSubmit(async (values) => {
+  const { data: res } = useFetch('/api/auth/login', {
+    method: 'POST',
+    body: values,
   })
 
-  console.log(data)
-}
+  console.log(res.value)
 
-const logout = () => {
-  const { data } = useFetch('/api/auth/logout', {
+  if (res.value?.status == 'success') {
+    await navigateTo('/admin')
+  }
+})
+
+const logout = async () => {
+  const { data: res } = useFetch('/api/auth/logout', {
     method: 'DELETE'
   })
 
-  console.log(data)
+  console.log(res.value)
+
+  if (res.value?.status == 'success') {
+    await navigateTo('/')
+  }
 }
 </script>
 
