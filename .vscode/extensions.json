@@ -3,6 +3,7 @@
     "dbaeumer.vscode-eslint",
     "vue.volar",
     "bradlc.vscode-tailwindcss",
-    "rvest.vs-code-prettier-eslint"
+    "rvest.vs-code-prettier-eslint",
+    "prisma.prisma"
   ]
 }
