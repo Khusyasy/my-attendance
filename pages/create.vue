@@ -9,6 +9,8 @@ async function create() {
 
   router.push("/qr/" + data.value?.id);
 }
+
+const { data } = await useFetch("/api/qr");
 </script>
 
 <template>
@@ -20,5 +22,11 @@ async function create() {
     >
       create now
     </button>
+
+    <ul v-if="data">
+      <li v-for="qr in data" :key="qr.id">
+        <NuxtLink :to="'/qr/' + qr.id"> QR ID: {{ qr.id }} </NuxtLink>
+      </li>
+    </ul>
   </div>
 </template>
