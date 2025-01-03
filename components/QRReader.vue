@@ -34,7 +34,6 @@ onUnmounted(() => {
 
 <style scoped>
 video {
-  width: 100%;
-  aspect-ratio: 1;
+  height: 100%;
 }
 </style>

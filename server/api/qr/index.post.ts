@@ -1,6 +1,18 @@
+import { z } from "zod";
+
+const bodySchema = z.object({
+  lat: z.number().min(-90).max(90),
+  long: z.number().min(-180).max(180),
+});
+
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  console.log(body);
+  const result = await readValidatedBody(event, (body) =>
+    bodySchema.safeParse(body),
+  );
+  if (!result.success) throw result.error.issues;
+  console.log(result.data);
+
+  const { lat, long } = result.data;
 
   const now = new Date();
 
@@ -9,7 +21,8 @@ export default defineEventHandler(async (event) => {
       createTimestamp: now,
       expireTimestamp: new Date(now.getTime() + 1000 * 60 * 60),
       QRCodeHash: randomHash(),
-      geolocation: "latitute,longitude",
+      lat,
+      long,
     },
   });
 
