@@ -9,5 +9,9 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "@nuxt/eslint",
     "@nuxtjs/leaflet",
+    "@nuxtjs/ngrok",
   ],
+  ngrok: {
+    authtoken: process.env.NGROK_AUTHTOKEN,
+  },
 });
