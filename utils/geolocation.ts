@@ -9,7 +9,9 @@ export const getGeolocation = (): Promise<GeolocationPosition> => {
 
   return new Promise(
     (resolve: PositionCallback, reject: PositionErrorCallback) => {
-      navigator.geolocation.getCurrentPosition(resolve, reject);
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        enableHighAccuracy: true,
+      });
     },
   );
 };

@@ -18,6 +18,7 @@ model Session {
   QRCodeHash      String
   lat             Float
   long            Float
+  radius          Float  // in meters
   attendances     Attendance[]
 }
 
@@ -27,6 +28,7 @@ model Attendance {
   QRCodeHash      String
   lat             Float
   long            Float
+  accuracy        Float  // in meters
   sessionId       Int
   session         Session  @relation(fields: [sessionId], references: [id])
 }

@@ -7,6 +7,7 @@ const bodySchema = z.object({
     .regex(/^[0-9A-Za-z]+$/),
   lat: z.number().min(-90).max(90),
   long: z.number().min(-180).max(180),
+  accuracy: z.number().min(0),
 });
 
 export default defineEventHandler(async (event) => {
@@ -15,7 +16,7 @@ export default defineEventHandler(async (event) => {
   );
   if (!result.success) throw result.error.issues;
 
-  const { QRCodeHash, lat, long } = result.data;
+  const { QRCodeHash, lat, long, accuracy } = result.data;
 
   const session = await prisma.session.findFirst({
     where: {
@@ -31,10 +32,19 @@ export default defineEventHandler(async (event) => {
   }
 
   const distance = calculateDistance(lat, long, session.lat, session.long);
-  if (distance > 0.5) {
+  if (
+    !isWithinRadius(
+      lat,
+      long,
+      accuracy,
+      session.lat,
+      session.long,
+      session.radius,
+    )
+  ) {
     throw createError({
       statusCode: 400,
-      statusMessage: "You are too far from the session",
+      statusMessage: "You are too far away from the session",
     });
   }
 
@@ -45,6 +55,7 @@ export default defineEventHandler(async (event) => {
       QRCodeHash,
       lat,
       long,
+      accuracy,
     },
   });
 

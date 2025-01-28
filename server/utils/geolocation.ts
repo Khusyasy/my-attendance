@@ -6,7 +6,7 @@ export const calculateDistance = (
 ): number => {
   const toRad = (value: number) => (value * Math.PI) / 180;
 
-  const R = 6371; // Radius of the Earth in kilometers
+  const R = 6371000; // Radius of the Earth in meters
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);
   const a =
@@ -16,7 +16,22 @@ export const calculateDistance = (
       Math.sin(dLon / 2) *
       Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const distance = R * c; // Distance in kilometers
+  const distance = R * c; // Distance in meters
 
   return distance;
+};
+
+export const isWithinRadius = (
+  userLat: number,
+  userLon: number,
+  userAccuracy: number,
+  sessionLat: number,
+  sessionLon: number,
+  sessionRadius: number,
+): boolean => {
+  const distance = calculateDistance(userLat, userLon, sessionLat, sessionLon);
+
+  const effectiveRadius = sessionRadius + userAccuracy;
+
+  return distance <= effectiveRadius;
 };

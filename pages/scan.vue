@@ -11,17 +11,24 @@ async function onDecode(result: QrScanner.ScanResult) {
 
   try {
     const pos = await getGeolocation();
-    const { data } = await useFetch("/api/attendance", {
+    const { data, error } = await useFetch("/api/attendance", {
       method: "POST",
       body: {
         QRCodeHash: result.data,
         lat: pos.coords.latitude,
         long: pos.coords.longitude,
+        accuracy: pos.coords.accuracy,
       },
     });
 
-    alert(JSON.stringify(data.value));
-    router.back();
+    if (error.value) {
+      alert(JSON.stringify(error.value));
+      currentQR.value = null;
+    } else {
+      alert(JSON.stringify(data.value));
+      currentQR.value = null;
+      router.back();
+    }
   } catch {
     alert("Please enable location services");
   }

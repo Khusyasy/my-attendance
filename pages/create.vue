@@ -3,11 +3,15 @@ const router = useRouter();
 
 const { data } = await useFetch("/api/qr");
 
-const pos = ref<GeolocationPosition | null>(null);
+const pos = ref<{
+  lat: number;
+  long: number;
+  radius: number;
+} | null>(null);
 
-onMounted(async () => {
-  pos.value = await getGeolocation();
-});
+function onNewPosition(newPos: { lat: number; long: number; radius: number }) {
+  pos.value = newPos;
+}
 
 async function create() {
   try {
@@ -19,8 +23,9 @@ async function create() {
     const { data } = await useFetch("/api/qr", {
       method: "POST",
       body: {
-        lat: pos.value.coords.latitude,
-        long: pos.value.coords.longitude,
+        lat: pos.value.lat,
+        long: pos.value.long,
+        radius: pos.value.radius,
       },
     });
 
@@ -35,7 +40,7 @@ async function create() {
   <div>
     <h1>GENERATE QR</h1>
     <div>
-      <CustomMap v-if="pos" :pos="pos" />
+      <CustomMap @new-position="onNewPosition" />
       <button
         class="rounded bg-green-300 px-2 py-1 hover:bg-green-400"
         @click="create"
