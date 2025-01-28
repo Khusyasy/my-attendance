@@ -13,5 +13,6 @@ export default defineNuxtConfig({
   ],
   ngrok: {
     authtoken: process.env.NGROK_AUTHTOKEN,
+    domain: process.env.NGROK_DOMAIN,
   },
 });
