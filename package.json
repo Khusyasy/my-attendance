@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@nuxt/eslint": "^0.5.1",
+    "@nuxt/ui": "^2.21.0",
     "@nuxtjs/leaflet": "^1.2.2",
     "@nuxtjs/ngrok": "^3.0.1",
     "@nuxtjs/tailwindcss": "^6.12.1",

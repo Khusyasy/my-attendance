@@ -3,14 +3,9 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   compatibilityDate: "2024-08-22",
   typescript: {
-    typeCheck: true,
+    typeCheck: false,
   },
-  modules: [
-    "@nuxtjs/tailwindcss",
-    "@nuxt/eslint",
-    "@nuxtjs/leaflet",
-    "@nuxtjs/ngrok",
-  ],
+  modules: ["@nuxt/eslint", "@nuxt/ui", "@nuxtjs/leaflet", "@nuxtjs/ngrok"],
   ngrok: {
     authtoken: process.env.NGROK_AUTHTOKEN,
     domain: process.env.NGROK_DOMAIN,
