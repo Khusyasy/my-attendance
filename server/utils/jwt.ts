@@ -7,7 +7,11 @@ if (ACCESS_TOKEN_SECRET === "" || REFRESH_TOKEN_SECRET === "") {
   throw new Error("Missing jwt token secret in environment variables");
 }
 
-export const generateTokens = (payload: { userId: number }) => {
+type Payload = {
+  userId: number;
+};
+
+export const generateTokens = (payload: Payload) => {
   const accessToken = jwt.sign(payload, ACCESS_TOKEN_SECRET, {
     expiresIn: "15m",
   });
@@ -18,9 +22,9 @@ export const generateTokens = (payload: { userId: number }) => {
 };
 
 export const verifyAccessToken = (token: string) => {
-  return jwt.verify(token, ACCESS_TOKEN_SECRET) as { userId: number };
+  return jwt.verify(token, ACCESS_TOKEN_SECRET) as Payload;
 };
 
 export const verifyRefreshToken = (token: string) => {
-  return jwt.verify(token, REFRESH_TOKEN_SECRET) as { userId: number };
+  return jwt.verify(token, REFRESH_TOKEN_SECRET) as Payload;
 };

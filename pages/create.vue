@@ -20,7 +20,8 @@ async function create() {
       return;
     }
 
-    const { data } = await useFetch("/api/qr", {
+    // TODO: handle error
+    const data = await $fetch("/api/qr", {
       method: "POST",
       body: {
         lat: pos.value.lat,
@@ -29,7 +30,7 @@ async function create() {
       },
     });
 
-    router.push("/qr/" + data.value?.id);
+    router.push("/qr/" + data.id);
   } catch {
     alert("Please enable location services");
   }

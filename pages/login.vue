@@ -53,7 +53,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   event.preventDefault();
   loading.value = true;
 
-  const { data, error } = await useFetch("/api/auth/login", {
+  // TODO: handle error
+  const data = await $fetch("/api/auth/login", {
     method: "POST",
     body: {
       username: event.data.username,
@@ -63,15 +64,14 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
   loading.value = false;
 
-  if (error.value) {
-    console.log(JSON.stringify(error.value));
-    errorMessage.value = error.value.statusMessage ?? "An error occurred";
-    return;
-  }
-
-  console.log(data.value);
+  console.log(data);
   router.push("/");
 }
+
+definePageMeta({
+  title: "Login to MyAttendance",
+  layout: "empty",
+});
 </script>
 
 <style scoped></style>

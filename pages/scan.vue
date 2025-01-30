@@ -11,7 +11,8 @@ async function onDecode(result: QrScanner.ScanResult) {
 
   try {
     const pos = await getGeolocation();
-    const { data, error } = await useFetch("/api/attendance", {
+    // TODO: handle error
+    const data = await $fetch("/api/attendance", {
       method: "POST",
       body: {
         QRCodeHash: result.data,
@@ -21,12 +22,7 @@ async function onDecode(result: QrScanner.ScanResult) {
       },
     });
 
-    if (error.value) {
-      alert(JSON.stringify(error.value));
-      currentQR.value = null;
-    }
-
-    alert(JSON.stringify(data.value));
+    alert(JSON.stringify(data));
     currentQR.value = null;
     router.back();
   } catch {
