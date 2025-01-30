@@ -1,4 +1,8 @@
 <script setup lang="ts">
+definePageMeta({
+  middleware: ["auth"],
+});
+
 const colorMode = useColorMode();
 const isDark = computed({
   get() {
@@ -8,11 +12,23 @@ const isDark = computed({
     colorMode.preference = colorMode.value === "dark" ? "light" : "dark";
   },
 });
+
+const router = useRouter();
+const logout = async () => {
+  await useFetch("/api/auth/logout", {
+    method: "POST",
+  });
+
+  router.push("/login");
+};
 </script>
 
 <template>
   <div>
     <h1>Index page</h1>
+    <div>
+      <p @click="logout()">Logout</p>
+    </div>
     <div>
       <NuxtLink to="create"> Go to Create </NuxtLink>
     </div>

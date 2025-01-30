@@ -11,6 +11,9 @@
     "lint": "eslint .",
     "format": "prettier --write \"{components,pages,plugins,middleware,layouts,composables,assets}/**/*.{js,jsx,ts,tsx,vue,html,css,scss,json,md}\""
   },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "dependencies": {
     "@nuxt/eslint": "^0.5.1",
     "@nuxt/ui": "^2.21.0",
@@ -18,8 +21,10 @@
     "@nuxtjs/ngrok": "^3.0.1",
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@prisma/client": "^5.18.0",
+    "bcryptjs": "^2.4.3",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
+    "jsonwebtoken": "^9.0.2",
     "nanoid": "^5.0.7",
     "nuxt": "^3.11.2",
     "qr-code-styling": "^1.6.0-rc.1",
@@ -29,9 +34,12 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.8",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.6",
     "prisma": "^5.18.0",
+    "tsx": "^4.19.2",
     "typescript": "^5.5.4",
     "vue-tsc": "^2.0.29"
   }

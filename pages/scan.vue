@@ -24,11 +24,11 @@ async function onDecode(result: QrScanner.ScanResult) {
     if (error.value) {
       alert(JSON.stringify(error.value));
       currentQR.value = null;
-    } else {
-      alert(JSON.stringify(data.value));
-      currentQR.value = null;
-      router.back();
     }
+
+    alert(JSON.stringify(data.value));
+    currentQR.value = null;
+    router.back();
   } catch {
     alert("Please enable location services");
   }
