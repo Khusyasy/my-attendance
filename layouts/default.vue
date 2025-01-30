@@ -77,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-const open = ref(true);
+const open = useState("drawer", () => true);
 
 const toggle = () => {
   open.value = !open.value;
