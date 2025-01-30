@@ -12,23 +12,18 @@ export default function () {
       return currentRole.value;
     }
 
-    try {
-      const data = await $fetch("/api/auth/role", {
-        method: "POST",
-      });
+    const res = await $fetch("/api/auth/role", {
+      method: "POST",
+    });
 
-      currentRole.value = data;
-      if (currentRole.value === null) {
-        lastCheck.value = null;
-        throw new Error("Unauthorized");
-      }
-      lastCheck.value = new Date().getTime();
-
-      return currentRole.value;
-    } catch {
+    if (res.status === "fail") {
       currentRole.value = null;
       lastCheck.value = null;
       return null;
+    } else if (res.status === "success") {
+      currentRole.value = res.data;
+      lastCheck.value = new Date().getTime();
+      return currentRole.value;
     }
   };
 

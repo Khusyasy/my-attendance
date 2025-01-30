@@ -11,8 +11,7 @@ async function onDecode(result: QrScanner.ScanResult) {
 
   try {
     const pos = await getGeolocation();
-    // TODO: handle error
-    const data = await $fetch("/api/attendance", {
+    const res = await $fetch("/api/attendance", {
       method: "POST",
       body: {
         QRCodeHash: result.data,
@@ -22,9 +21,16 @@ async function onDecode(result: QrScanner.ScanResult) {
       },
     });
 
-    alert(JSON.stringify(data));
     currentQR.value = null;
-    router.back();
+
+    if (res.status === "fail") {
+      alert(res.data);
+      return;
+    } else if (res.status === "success") {
+      alert(JSON.stringify(res));
+      router.back();
+      return;
+    }
   } catch {
     alert("Please enable location services");
   }

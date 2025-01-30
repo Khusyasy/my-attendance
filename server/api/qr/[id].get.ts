@@ -7,5 +7,9 @@ export default defineEventHandler(async (event) => {
     },
   });
 
-  return qr;
+  if (!qr) {
+    return jsend.fail("QR code not found");
+  }
+
+  return jsend.success(qr);
 });

@@ -20,8 +20,7 @@ async function create() {
       return;
     }
 
-    // TODO: handle error
-    const data = await $fetch("/api/qr", {
+    const res = await $fetch("/api/qr", {
       method: "POST",
       body: {
         lat: pos.value.lat,
@@ -30,7 +29,11 @@ async function create() {
       },
     });
 
-    router.push("/qr/" + data.id);
+    if (res.status === "fail") {
+      alert(res.data);
+    } else if (res.status === "success") {
+      router.push("/qr/" + res.data.id);
+    }
   } catch {
     alert("Please enable location services");
   }
@@ -50,8 +53,8 @@ async function create() {
       </button>
     </div>
 
-    <ul v-if="data">
-      <li v-for="qr in data" :key="qr.id">
+    <ul v-if="data && data.status === 'success'">
+      <li v-for="qr in data.data" :key="qr.id">
         <NuxtLink :to="'/qr/' + qr.id"> QR ID: {{ qr.id }} </NuxtLink>
       </li>
     </ul>

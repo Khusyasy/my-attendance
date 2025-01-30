@@ -3,10 +3,7 @@ export default defineEventHandler(async (event) => {
   const refreshToken = cookies.refresh_token;
 
   if (!refreshToken) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: "Refresh token required",
-    });
+    return jsend.fail(null);
   }
 
   try {
@@ -16,10 +13,7 @@ export default defineEventHandler(async (event) => {
     });
 
     if (!user || user.refreshToken !== refreshToken) {
-      throw createError({
-        statusCode: 401,
-        statusMessage: "Invalid refresh token",
-      });
+      return jsend.fail(null);
     }
 
     const { accessToken, refreshToken: newRefreshToken } = generateTokens({
@@ -45,17 +39,12 @@ export default defineEventHandler(async (event) => {
       maxAge: 60 * 60 * 24 * 7, // 7 days
     });
 
-    return {
-      user: {
-        id: user.id,
-        username: user.username,
-        role: user.roleName,
-      },
-    };
-  } catch {
-    throw createError({
-      statusCode: 401,
-      statusMessage: "Invalid refresh token",
+    return jsend.success({
+      id: user.id,
+      username: user.username,
+      role: user.roleName,
     });
+  } catch {
+    return jsend.fail(null);
   }
 });

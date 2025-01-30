@@ -14,7 +14,10 @@ export default defineEventHandler(async (event) => {
   const result = await readValidatedBody(event, (body) =>
     bodySchema.safeParse(body),
   );
-  if (!result.success) throw result.error.issues;
+  // if (!result.success) throw result.error.issues;
+  if (!result.success) {
+    return jsend.fail(null);
+  }
 
   const { QRCodeHash, lat, long, accuracy } = result.data;
 
@@ -25,10 +28,7 @@ export default defineEventHandler(async (event) => {
   });
 
   if (!session) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: "QR code not found",
-    });
+    return jsend.fail("QR code not found");
   }
 
   const distance = calculateDistance(lat, long, session.lat, session.long);
@@ -42,10 +42,7 @@ export default defineEventHandler(async (event) => {
       session.radius,
     )
   ) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: "You are too far away from the session",
-    });
+    return jsend.fail("You are too far away from the session");
   }
 
   const attendance = await prisma.attendance.create({
@@ -59,5 +56,5 @@ export default defineEventHandler(async (event) => {
     },
   });
 
-  return { attendance, session, distance };
+  return jsend.success({ attendance, session, distance });
 });

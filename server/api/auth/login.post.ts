@@ -9,26 +9,21 @@ export default defineEventHandler(async (event) => {
   const result = await readValidatedBody(event, (body) =>
     bodySchema.safeParse(body),
   );
-  if (!result.success) throw result.error.issues;
-
+  // if (!result.success) throw result.error.issues;
+  if (!result.success) {
+    return jsend.fail("Invalid username or password");
+  }
   const { username, password } = result.data;
 
   const user = await prisma.user.findUnique({
     where: { username },
   });
-
   if (!user) {
-    throw createError({
-      status: 401,
-      statusMessage: "Invalid username or password",
-    });
+    return jsend.fail("Invalid username or password");
   }
 
   if (!comparePassword(password, user.password)) {
-    throw createError({
-      status: 401,
-      statusMessage: "Invalid username or password",
-    });
+    return jsend.fail("Invalid username or password");
   }
 
   const { accessToken, refreshToken } = generateTokens({
@@ -56,11 +51,9 @@ export default defineEventHandler(async (event) => {
     maxAge: 60 * 60 * 24 * 7, // 7 days
   });
 
-  return {
-    user: {
-      id: user.id,
-      username: user.username,
-      role: user.roleName,
-    },
-  };
+  return jsend.success({
+    id: user.id,
+    username: user.username,
+    role: user.roleName,
+  });
 });

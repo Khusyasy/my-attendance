@@ -2,7 +2,7 @@ export default defineEventHandler(async (event) => {
   const cookies = parseCookies(event);
   const accessToken = cookies.auth_token;
   if (!accessToken) {
-    return null;
+    return jsend.fail(null);
   }
 
   try {
@@ -12,11 +12,11 @@ export default defineEventHandler(async (event) => {
     });
 
     if (!user) {
-      return null;
+      return jsend.fail(null);
     }
 
-    return user.roleName as "admin" | "teacher" | "student";
+    return jsend.success(user.roleName as "admin" | "teacher" | "student");
   } catch {
-    return null;
+    return jsend.fail(null);
   }
 });

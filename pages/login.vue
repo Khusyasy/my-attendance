@@ -53,8 +53,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   event.preventDefault();
   loading.value = true;
 
-  // TODO: handle error
-  const data = await $fetch("/api/auth/login", {
+  const res = await $fetch("/api/auth/login", {
     method: "POST",
     body: {
       username: event.data.username,
@@ -64,8 +63,13 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
   loading.value = false;
 
-  console.log(data);
-  router.push("/");
+  if (res.status === "fail") {
+    errorMessage.value = res.data;
+    return;
+  } else if (res.status === "success") {
+    console.log(res);
+    router.push("/");
+  }
 }
 
 definePageMeta({

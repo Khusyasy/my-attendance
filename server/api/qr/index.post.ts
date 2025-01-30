@@ -10,13 +10,13 @@ export default defineEventHandler(async (event) => {
   const result = await readValidatedBody(event, (body) =>
     bodySchema.safeParse(body),
   );
-  if (!result.success) throw result.error.issues;
-  console.log(result.data);
-
+  // if (!result.success) throw result.error.issues;
+  if (!result.success) {
+    return jsend.fail(null);
+  }
   const { lat, long, radius } = result.data;
 
   const now = new Date();
-
   const qr = await prisma.session.create({
     data: {
       createTimestamp: now,
@@ -28,5 +28,5 @@ export default defineEventHandler(async (event) => {
     },
   });
 
-  return qr;
+  return jsend.success(qr);
 });

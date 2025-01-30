@@ -21,5 +21,5 @@ export default defineEventHandler(async (event) => {
     sameSite: "lax",
   });
 
-  return { success: true };
+  return jsend.success(null);
 });
