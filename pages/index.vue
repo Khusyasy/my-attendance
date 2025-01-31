@@ -1,8 +1,4 @@
 <script setup lang="ts">
-definePageMeta({
-  middleware: ["auth"],
-});
-
 const router = useRouter();
 const logout = async () => {
   await $fetch("/api/auth/logout", {
@@ -11,6 +7,10 @@ const logout = async () => {
 
   router.push("/login");
 };
+
+definePageMeta({
+  middleware: ["auth"],
+});
 </script>
 
 <template>

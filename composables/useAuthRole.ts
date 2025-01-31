@@ -1,34 +1,19 @@
 export default function () {
-  // const currentRole = ref<"admin" | "teacher" | "student" | null>(null);
-  // const lastCheck = ref<number | null>(null);
-  const currentRole = useState<"admin" | "teacher" | "student" | null>(
-    "currentRole",
-    () => null,
-  );
-  const lastCheck = useState<number | null>("lastCheck", () => null);
+  // TODO: i really dont understand composables so f
+  const { data, error, execute } = useFetch("/api/auth/role", {
+    method: "POST",
+    immediate: false,
+  });
 
   const getRole = async () => {
-    const now = new Date().getTime();
-    if (
-      currentRole.value !== null &&
-      lastCheck.value !== null &&
-      now - lastCheck.value < 1000 * 60 * 5 // 5 minutes
-    ) {
-      return currentRole.value;
-    }
+    await execute();
 
-    const res = await $fetch("/api/auth/role", {
-      method: "POST",
-    });
-
-    if (res.status === "fail") {
-      currentRole.value = null;
-      lastCheck.value = null;
+    if (error.value) {
+      return null;
+    } else if (!data.value || data.value.status === "fail") {
       return null;
     }
-    currentRole.value = res.data;
-    lastCheck.value = new Date().getTime();
-    return currentRole.value;
+    return data.value.data;
   };
 
   return { getRole };
