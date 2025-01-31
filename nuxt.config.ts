@@ -5,6 +5,14 @@ export default defineNuxtConfig({
   typescript: {
     typeCheck: false,
   },
+  imports: {
+    dirs: ["schemas"],
+  },
+  nitro: {
+    imports: {
+      dirs: ["schemas"],
+    },
+  },
   modules: ["@nuxt/eslint", "@nuxt/ui", "@nuxtjs/leaflet", "@nuxtjs/ngrok"],
   ngrok: {
     authtoken: process.env.NGROK_AUTHTOKEN,

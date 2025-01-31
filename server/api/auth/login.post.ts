@@ -1,13 +1,6 @@
-import { z } from "zod";
-
-const bodySchema = z.object({
-  username: z.string(),
-  password: z.string().min(8),
-});
-
 export default defineEventHandler(async (event) => {
   const result = await readValidatedBody(event, (body) =>
-    bodySchema.safeParse(body),
+    loginPostSchema.safeParse(body),
   );
   // if (!result.success) throw result.error.issues;
   if (!result.success) {

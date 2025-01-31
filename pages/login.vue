@@ -2,7 +2,7 @@
   <div class="flex h-screen w-screen items-center justify-center">
     <UCard class="w-full max-w-sm bg-white/75 backdrop-blur dark:bg-white/5">
       <UForm
-        :schema="schema"
+        :schema="loginPostSchema"
         :state="state"
         class="space-y-4"
         @submit="onSubmit"
@@ -31,14 +31,8 @@
 </template>
 
 <script setup lang="ts">
-import { z } from "zod";
 import type { FormSubmitEvent } from "#ui/types";
 
-const schema = z.object({
-  username: z.string(),
-  password: z.string().min(8, "Must be at least 8 characters"),
-});
-type Schema = z.output<typeof schema>;
 const state = reactive({
   username: undefined,
   password: undefined,
@@ -49,7 +43,7 @@ const errorMessage = ref<string | null>(null);
 
 const router = useRouter();
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
+async function onSubmit(event: FormSubmitEvent<LoginPostSchema>) {
   event.preventDefault();
   loading.value = true;
 
