@@ -10,6 +10,9 @@ export default defineEventHandler(async (event) => {
     const decoded = verifyRefreshToken(refreshToken);
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
+      omit: {
+        refreshToken: false,
+      },
     });
 
     if (!user || user.refreshToken !== refreshToken) {

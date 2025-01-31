@@ -10,6 +10,9 @@ export default defineEventHandler(async (event) => {
 
   const user = await prisma.user.findUnique({
     where: { username },
+    omit: {
+      password: false,
+    },
   });
   if (!user) {
     return jsend.fail("Invalid username or password");

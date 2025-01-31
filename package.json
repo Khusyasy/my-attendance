@@ -20,7 +20,7 @@
     "@nuxtjs/leaflet": "^1.2.2",
     "@nuxtjs/ngrok": "^3.0.1",
     "@nuxtjs/tailwindcss": "^6.12.1",
-    "@prisma/client": "^5.18.0",
+    "@prisma/client": "^6.3.0",
     "bcryptjs": "^2.4.3",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
@@ -38,7 +38,7 @@
     "@types/jsonwebtoken": "^9.0.8",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.6",
-    "prisma": "^5.18.0",
+    "prisma": "^6.3.0",
     "tsx": "^4.19.2",
     "typescript": "^5.5.4",
     "vue-tsc": "^2.0.29"
