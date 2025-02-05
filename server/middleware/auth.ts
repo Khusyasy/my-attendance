@@ -1,8 +1,7 @@
 export default defineEventHandler(async (event) => {
-  const cookies = parseCookies(event);
-  const accessToken = cookies.auth_token;
+  const accessToken = getCookie(event, "auth_token");
   if (!accessToken) {
-    return jsend.fail(null);
+    return;
   }
 
   try {
@@ -12,11 +11,13 @@ export default defineEventHandler(async (event) => {
     });
 
     if (!user) {
-      return jsend.fail(null);
+      return;
     }
 
-    return jsend.success(user.roleName as "admin" | "teacher" | "student");
+    event.context.auth = {
+      id: user.id,
+    };
   } catch {
-    return jsend.fail(null);
+    return;
   }
 });

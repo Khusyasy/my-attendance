@@ -18,6 +18,9 @@ export default defineEventHandler(async (event) => {
   if (!result.success) {
     return jsend.fail(null);
   }
+  if (!event.context.auth) {
+    return jsend.fail("Unauthorized");
+  }
 
   const { QRCodeHash, lat, long, accuracy } = result.data;
 
@@ -31,23 +34,24 @@ export default defineEventHandler(async (event) => {
     return jsend.fail("QR code not found");
   }
 
-  const distance = calculateDistance(lat, long, session.lat, session.long);
-  if (
-    !isWithinRadius(
-      lat,
-      long,
-      accuracy,
-      session.lat,
-      session.long,
-      session.radius,
-    )
-  ) {
-    return jsend.fail("You are too far away from the session");
-  }
+  // const distance = calculateDistance(lat, long, session.lat, session.long);
+  // if (
+  //   !isWithinRadius(
+  //     lat,
+  //     long,
+  //     accuracy,
+  //     session.lat,
+  //     session.long,
+  //     session.radius,
+  //   )
+  // ) {
+  //   return jsend.fail("You are too far away from the session");
+  // }
 
   const attendance = await prisma.attendance.create({
     data: {
       sessionId: session.id,
+      userId: event.context.auth.id,
       timestamp: new Date(),
       QRCodeHash,
       lat,
@@ -56,5 +60,5 @@ export default defineEventHandler(async (event) => {
     },
   });
 
-  return jsend.success({ attendance, session, distance });
+  return jsend.success({ attendance, session });
 });

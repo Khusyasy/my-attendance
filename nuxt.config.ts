@@ -10,7 +10,7 @@ export default defineNuxtConfig({
   },
   nitro: {
     imports: {
-      dirs: ["schemas"],
+      dirs: ["schemas", "types"],
     },
   },
   modules: ["@nuxt/eslint", "@nuxt/ui", "@nuxtjs/leaflet", "@nuxtjs/ngrok"],

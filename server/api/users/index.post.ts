@@ -6,13 +6,12 @@ export default defineEventHandler(async (event) => {
   if (!result.success) {
     return jsend.fail(null);
   }
-  const { username, password, role } = result.data;
+  const { username, password } = result.data;
 
   const user = await prisma.user.create({
     data: {
       username,
       password: hashPassword(password),
-      roleName: role,
     },
   });
 

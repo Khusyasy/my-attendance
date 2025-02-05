@@ -85,13 +85,11 @@ const toggle = () => {
   open.value = !open.value;
 };
 
-const { getRole } = useAuthRole();
-const role = await getRole();
-
 const navLinks = [
   { name: "Dashboard", to: "/", icon: "i-heroicons-home-20-solid" },
 ];
 
+const role = "admin";
 if (role === "admin") {
   navLinks.push(
     ...[

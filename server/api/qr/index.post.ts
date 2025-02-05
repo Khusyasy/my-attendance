@@ -14,17 +14,19 @@ export default defineEventHandler(async (event) => {
   if (!result.success) {
     return jsend.fail(null);
   }
-  const { lat, long, radius } = result.data;
+  // const { lat, long, radius } = result.data;
 
   const now = new Date();
   const qr = await prisma.session.create({
     data: {
+      eventId: 1,
       createTimestamp: now,
       expireTimestamp: new Date(now.getTime() + 1000 * 60 * 60),
       QRCodeHash: randomHash(),
-      lat,
-      long,
-      radius,
+      geolocation: true,
+      // lat,
+      // long,
+      // radius,
     },
   });
 

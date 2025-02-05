@@ -1,6 +1,5 @@
 export default defineEventHandler(async (event) => {
-  const cookies = parseCookies(event);
-  const refreshToken = cookies.refresh_token;
+  const refreshToken = getCookie(event, "refresh_token");
 
   if (!refreshToken) {
     return jsend.fail(null);
@@ -45,7 +44,6 @@ export default defineEventHandler(async (event) => {
     return jsend.success({
       id: user.id,
       username: user.username,
-      role: user.roleName,
     });
   } catch {
     return jsend.fail(null);

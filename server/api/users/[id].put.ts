@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
   if (!result.success) {
     return jsend.fail(null);
   }
-  const { username, password, role } = result.data;
+  const { username, password } = result.data;
 
   const user = await prisma.user.findUnique({
     where: {
@@ -24,7 +24,6 @@ export default defineEventHandler(async (event) => {
     data: {
       username,
       password: password ? hashPassword(password) : undefined,
-      roleName: role,
     },
   });
 
