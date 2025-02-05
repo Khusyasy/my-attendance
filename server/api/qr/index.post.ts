@@ -10,9 +10,8 @@ export default defineEventHandler(async (event) => {
   const result = await readValidatedBody(event, (body) =>
     bodySchema.safeParse(body),
   );
-  // if (!result.success) throw result.error.issues;
   if (!result.success) {
-    return jsend.fail(null);
+    return jsend.fail(result.error.issues);
   }
   // const { lat, long, radius } = result.data;
 

@@ -11,15 +11,15 @@ const bodySchema = z.object({
 });
 
 export default defineEventHandler(async (event) => {
+  if (!event.context.auth) {
+    return jsend.error("Unauthorized");
+  }
+
   const result = await readValidatedBody(event, (body) =>
     bodySchema.safeParse(body),
   );
-  // if (!result.success) throw result.error.issues;
   if (!result.success) {
-    return jsend.fail(null);
-  }
-  if (!event.context.auth) {
-    return jsend.fail("Unauthorized");
+    return jsend.fail(result.error.issues);
   }
 
   const { QRCodeHash, lat, long, accuracy } = result.data;

@@ -2,7 +2,6 @@ export default defineEventHandler(async (event) => {
   const result = await readValidatedBody(event, (body) =>
     loginPostSchema.safeParse(body),
   );
-  // if (!result.success) throw result.error.issues;
   if (!result.success) {
     return jsend.fail("Invalid username or password");
   }
