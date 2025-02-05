@@ -66,11 +66,13 @@
         </nav>
       </aside>
       <div
-        class="w-full"
+        class="flex w-full justify-center"
         :class="{ 'ml-0': !open, 'ml-64': open }"
-        style="height: calc(100vh - 4rem)"
+        style="min-height: calc(100vh - 4rem)"
       >
-        <slot />
+        <div class="max-w-7xl flex-1">
+          <slot />
+        </div>
       </div>
     </div>
   </div>

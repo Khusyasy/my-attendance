@@ -27,7 +27,7 @@ async function main() {
     },
   });
 
-  const admin1 = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: { username: "admin1" },
     update: {},
     create: {
@@ -37,7 +37,7 @@ async function main() {
     },
   });
 
-  const teacher1 = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: { username: "teacher1" },
     update: {},
     create: {
@@ -47,7 +47,7 @@ async function main() {
     },
   });
 
-  const student1 = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: { username: "student1" },
     update: {},
     create: {
@@ -57,14 +57,18 @@ async function main() {
     },
   });
 
-  console.log({
-    adminRole,
-    teacherRole,
-    studentRole,
-    admin1,
-    teacher1,
-    student1,
-  });
+  // make dummy 10 users per role
+  for (let i = 0; i < 10; i++) {
+    for (const role of [adminRole, teacherRole, studentRole]) {
+      await prisma.user.create({
+        data: {
+          username: `${role.name}user${i}`,
+          roleName: role.name,
+          password: bcrypt.hashSync("password", 10),
+        },
+      });
+    }
+  }
 }
 
 main()
