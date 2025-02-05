@@ -10,40 +10,76 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Role {
-  name String @id
-  users User[]
-}
-
 model User {
   id           Int     @id @default(autoincrement())
   username     String  @unique
   password     String
-  roleName     String
-  role         Role    @relation(fields: [roleName], references: [name])
   refreshToken String?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+
+  Enrollment Enrollment[]
+  Attendance Attendance[]
+}
+
+model Event {
+  id         Int      @id @default(autoincrement())
+  name       String
+  lat             Float
+  long            Float
+  radius          Float  // in meters
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  Enrollment Enrollment[]
+  Session Session[]
+}
+
+enum Role {
+  Owner
+  Organizer
+  Attendee
+}
+
+model Enrollment {
+  id       Int    @id @default(autoincrement())
+  userId   Int
+  eventId  Int
+  role     Role
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  user     User   @relation(fields: [userId], references: [id])
+  event    Event  @relation(fields: [eventId], references: [id])
 }
 
 model Session {
   id              Int      @id @default(autoincrement())
+  eventId         Int
   createTimestamp DateTime
   expireTimestamp DateTime
   QRCodeHash      String
-  lat             Float
-  long            Float
-  radius          Float  // in meters
+  geolocation     Boolean
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  event           Event    @relation(fields: [eventId], references: [id])
+
   attendances     Attendance[]
 }
 
 model Attendance {
   id              Int      @id @default(autoincrement())
+  sessionId       Int
+  userId          Int
   timestamp       DateTime
   QRCodeHash      String
   lat             Float
   long            Float
   accuracy        Float  // in meters
-  sessionId       Int
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
   session         Session  @relation(fields: [sessionId], references: [id])
+  user            User     @relation(fields: [userId], references: [id])
 }

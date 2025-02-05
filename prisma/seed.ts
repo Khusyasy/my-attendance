@@ -3,72 +3,54 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  const adminRole = await prisma.role.upsert({
-    where: { name: "admin" },
-    update: {},
-    create: {
-      name: "admin",
-    },
-  });
-
-  const teacherRole = await prisma.role.upsert({
-    where: { name: "teacher" },
-    update: {},
-    create: {
-      name: "teacher",
-    },
-  });
-
-  const studentRole = await prisma.role.upsert({
-    where: { name: "student" },
-    update: {},
-    create: {
-      name: "student",
-    },
-  });
-
-  await prisma.user.upsert({
-    where: { username: "admin1" },
-    update: {},
-    create: {
-      username: "admin1",
-      roleName: "admin",
-      password: bcrypt.hashSync("password", 10),
-    },
-  });
-
-  await prisma.user.upsert({
-    where: { username: "teacher1" },
-    update: {},
-    create: {
-      username: "teacher1",
-      roleName: "teacher",
-      password: bcrypt.hashSync("password", 10),
-    },
-  });
-
-  await prisma.user.upsert({
-    where: { username: "student1" },
-    update: {},
-    create: {
-      username: "student1",
-      roleName: "student",
-      password: bcrypt.hashSync("password", 10),
-    },
-  });
-
-  // make dummy 10 users per role
-  for (let i = 0; i < 10; i++) {
-    for (const role of [adminRole, teacherRole, studentRole]) {
-      await prisma.user.create({
-        data: {
-          username: `${role.name}user${i}`,
-          roleName: role.name,
-          password: bcrypt.hashSync("password", 10),
-        },
-      });
-    }
+  // make dummy 10 users
+  for (let i = 1; i <= 10; i++) {
+    await prisma.user.create({
+      data: {
+        username: `user${i}`,
+        password: bcrypt.hashSync("password", 10),
+      },
+    });
   }
+
+  // dummy event
+  const event1 = await prisma.event.create({
+    data: {
+      name: "Event 1",
+      lat: 37.123456,
+      long: 127.123456,
+      radius: 100,
+      Enrollment: {
+        createMany: {
+          data: [
+            {
+              userId: 1,
+              role: "Owner",
+            },
+            {
+              userId: 2,
+              role: "Organizer",
+            },
+            {
+              userId: 3,
+              role: "Attendee",
+            },
+          ],
+        },
+      },
+    },
+  });
+
+  // make session
+  const _session1 = await prisma.session.create({
+    data: {
+      eventId: event1.id,
+      createTimestamp: new Date(),
+      expireTimestamp: new Date(),
+      QRCodeHash: "123456",
+      geolocation: true,
+    },
+  });
 }
 
 main()
