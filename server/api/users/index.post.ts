@@ -5,11 +5,13 @@ export default defineEventHandler(async (event) => {
   if (!result.success) {
     return jsend.fail(result.error.issues);
   }
-  const { username, password } = result.data;
+  const { email, name, password } = result.data;
 
+  // TODO: implement register logic, check if user already exists
   const user = await prisma.user.create({
     data: {
-      username,
+      email,
+      name,
       password: hashPassword(password),
     },
   });

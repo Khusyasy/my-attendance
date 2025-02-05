@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
 
     return jsend.success({
       id: user.id,
-      username: user.username,
+      email: user.email,
     });
   } catch {
     return jsend.fail(null);

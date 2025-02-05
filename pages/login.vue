@@ -16,8 +16,8 @@
           :description="errorMessage"
         />
 
-        <UFormGroup label="Username" name="username">
-          <UInput v-model="state.username" />
+        <UFormGroup label="Email" name="email">
+          <UInput v-model="state.email" />
         </UFormGroup>
 
         <UFormGroup label="Password" name="password">
@@ -34,7 +34,7 @@
 import type { FormSubmitEvent } from "#ui/types";
 
 const state = reactive({
-  username: undefined,
+  email: undefined,
   password: undefined,
 });
 
@@ -43,6 +43,7 @@ const errorMessage = ref<string | null>(null);
 
 const router = useRouter();
 
+// TODO: create register
 async function onSubmit(event: FormSubmitEvent<LoginPostSchema>) {
   event.preventDefault();
   loading.value = true;
@@ -50,7 +51,7 @@ async function onSubmit(event: FormSubmitEvent<LoginPostSchema>) {
   const res = await $fetch("/api/auth/login", {
     method: "POST",
     body: {
-      username: event.data.username,
+      email: event.data.email,
       password: event.data.password,
     },
   });

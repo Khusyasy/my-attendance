@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   if (!result.success) {
     return jsend.fail(result.error.issues);
   }
-  const { username, password } = result.data;
+  const { email, name, password } = result.data;
 
   const user = await prisma.user.findUnique({
     where: {
@@ -21,7 +21,8 @@ export default defineEventHandler(async (event) => {
   const updatedUser = await prisma.user.update({
     where: { id },
     data: {
-      username,
+      email,
+      name,
       password: password ? hashPassword(password) : undefined,
     },
   });

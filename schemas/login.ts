@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const loginPostSchema = z.object({
-  username: z.string(),
+  email: z.string().email(),
   password: z.string().min(8, "Must be at least 8 characters"),
 });
 

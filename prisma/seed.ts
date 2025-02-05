@@ -7,7 +7,8 @@ async function main() {
   for (let i = 1; i <= 10; i++) {
     await prisma.user.create({
       data: {
-        username: `user${i}`,
+        email: `user${i}@test.com`,
+        name: `User ${i}`,
         password: bcrypt.hashSync("password", 10),
       },
     });

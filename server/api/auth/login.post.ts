@@ -3,22 +3,22 @@ export default defineEventHandler(async (event) => {
     loginPostSchema.safeParse(body),
   );
   if (!result.success) {
-    return jsend.fail("Invalid username or password");
+    return jsend.fail("Invalid email or password");
   }
-  const { username, password } = result.data;
+  const { email, password } = result.data;
 
   const user = await prisma.user.findUnique({
-    where: { username },
+    where: { email },
     omit: {
       password: false,
     },
   });
   if (!user) {
-    return jsend.fail("Invalid username or password");
+    return jsend.fail("Invalid email or password");
   }
 
   if (!comparePassword(password, user.password)) {
-    return jsend.fail("Invalid username or password");
+    return jsend.fail("Invalid email or password");
   }
 
   const { accessToken, refreshToken } = generateTokens({
@@ -48,6 +48,6 @@ export default defineEventHandler(async (event) => {
 
   return jsend.success({
     id: user.id,
-    username: user.username,
+    email: user.email,
   });
 });

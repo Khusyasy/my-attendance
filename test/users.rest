@@ -8,9 +8,9 @@ POST {{baseUrl}}/users
 Content-Type: {{contentType}}
 
 {
-    "username": "johndoe",
-    "password": "securePassword123",
-    "role": "teacher"
+    "email": "johndoe@test.com",
+    "name": "John Doe",
+    "password": "securePassword123"
 }
 
 ### Variables for response testing
@@ -29,8 +29,7 @@ PUT {{baseUrl}}/users/{{userId}}
 Content-Type: {{contentType}}
 
 {
-    "username": "johndoe_updated",
-    "role": "admin"
+    "name": "johndoe updated"
 }
 
 ### Delete a user
