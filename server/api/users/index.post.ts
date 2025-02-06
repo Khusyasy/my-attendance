@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
   });
 
   if (!user) {
-    return jsend.error("Failed to create user");
+    return jsend.fail("Failed to create user");
   }
 
   return jsend.success(user);
