@@ -18,6 +18,7 @@ async function main() {
   const event1 = await prisma.event.create({
     data: {
       name: "Event 1",
+      code: "ABCDEFGH",
       lat: 37.123456,
       long: 127.123456,
       radius: 100,

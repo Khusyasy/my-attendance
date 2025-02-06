@@ -14,6 +14,7 @@ export default defineEventHandler(async (event) => {
   const ev = await prisma.event.create({
     data: {
       name,
+      code: nidEventCode(),
       lat,
       long,
       radius,

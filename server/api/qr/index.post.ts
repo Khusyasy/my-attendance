@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
       eventId: 1,
       createTimestamp: now,
       expireTimestamp: new Date(now.getTime() + 1000 * 60 * 60),
-      QRCodeHash: randomHash(),
+      QRCodeHash: nidQRCode(),
       geolocation: true,
       // lat,
       // long,

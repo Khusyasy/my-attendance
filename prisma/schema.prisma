@@ -27,6 +27,7 @@ model User {
 model Event {
   id         Int      @id @default(autoincrement())
   name       String
+  code   String   @unique
   lat        Float?
   long       Float?
   radius     Float?  // in meters
