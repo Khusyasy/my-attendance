@@ -7,7 +7,13 @@ export default defineEventHandler(async (event) => {
   }
   const { email, name, password } = result.data;
 
-  // TODO: implement register logic, check if user already exists
+  const check = await prisma.user.findUnique({
+    where: { email },
+  });
+  if (check) {
+    return jsend.fail("Email already used");
+  }
+
   const user = await prisma.user.create({
     data: {
       email,

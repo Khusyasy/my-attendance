@@ -46,6 +46,7 @@ enum Role {
 
 model Enrollment {
   id       Int    @id @default(autoincrement())
+  // TODO: ganti pake compound key 
   userId   Int
   eventId  Int
   role     Role
@@ -73,6 +74,7 @@ model Session {
 
 model Attendance {
   id              Int      @id @default(autoincrement())
+  // TODO: ganti pake compound key
   sessionId       Int
   userId          Int
   timestamp       DateTime

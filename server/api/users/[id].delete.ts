@@ -1,4 +1,3 @@
-// TODO: users delete api
 export default defineEventHandler(async (event) => {
   const id = Number(getRouterParam(event, "id"));
 
