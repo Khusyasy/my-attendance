@@ -1,0 +1,23 @@
+meta {
+  name: delete
+  type: http
+  seq: 8
+}
+
+delete {
+  url: {{baseUrl}}/events/{{eventId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "johndoe@test.test",
+    "name": "John Doe",
+    "password": "securePassword123"
+  }
+}
+
+script:post-response {
+  bru.setVar("userId", undefined)
+}
