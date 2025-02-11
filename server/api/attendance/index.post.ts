@@ -12,7 +12,7 @@ const bodySchema = z.object({
 
 export default defineEventHandler(async (event) => {
   if (!event.context.auth) {
-    return jsend.error("Unauthorized");
+    return jsend.fail("Unauthorized");
   }
 
   const result = await readValidatedBody(event, (body) =>

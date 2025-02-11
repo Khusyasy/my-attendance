@@ -1,6 +1,7 @@
 export default defineEventHandler(async (event) => {
+  console.log("event", event.context.auth);
   if (!event.context.auth) {
-    return jsend.error("Unauthorized");
+    return jsend.fail("Unauthorized");
   }
 
   const result = await readValidatedBody(event, (body) =>

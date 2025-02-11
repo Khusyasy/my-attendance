@@ -87,56 +87,27 @@ const toggle = () => {
 
 const navLinks = [
   { name: "Dashboard", to: "/", icon: "i-heroicons-home-20-solid" },
+  {
+    name: "Scan",
+    to: "/scan",
+    icon: "i-heroicons-camera-20-solid",
+  },
+  {
+    name: "History",
+    to: "/history",
+    icon: "i-heroicons-clock-20-solid",
+  },
+  {
+    name: "Summary",
+    to: "/summary",
+    icon: "i-heroicons-chart-pie-20-solid",
+  },
+  {
+    name: "Events",
+    to: "/events",
+    icon: "i-heroicons-calendar-days-20-solid",
+  },
 ];
-
-const role = "admin";
-if (role === "admin") {
-  navLinks.push(
-    ...[
-      { name: "Users", to: "/users", icon: "i-heroicons-user-group-20-solid" },
-      {
-        name: "Courses",
-        to: "/courses",
-        icon: "i-heroicons-academic-cap-20-solid",
-      },
-    ],
-  );
-} else if (role === "teacher") {
-  navLinks.push(
-    ...[
-      {
-        name: "Classes",
-        to: "/classes",
-        icon: "i-heroicons-academic-cap-20-solid",
-      },
-      {
-        name: "Summary",
-        to: "/summary",
-        icon: "i-heroicons-chart-pie-20-solid",
-      },
-    ],
-  );
-} else if (role === "student") {
-  navLinks.push(
-    ...[
-      {
-        name: "Scan",
-        to: "/scan",
-        icon: "i-heroicons-camera-20-solid",
-      },
-      {
-        name: "History",
-        to: "/history",
-        icon: "i-heroicons-clock-20-solid",
-      },
-      {
-        name: "Summary",
-        to: "/summary",
-        icon: "i-heroicons-chart-pie-20-solid",
-      },
-    ],
-  );
-}
 
 const colorMode = useColorMode();
 const isDark = computed({

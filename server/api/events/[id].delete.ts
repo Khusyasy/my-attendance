@@ -1,6 +1,6 @@
 export default defineEventHandler(async (event) => {
   if (!event.context.auth) {
-    return jsend.error("Unauthorized");
+    return jsend.fail("Unauthorized");
   }
 
   const id = Number(getRouterParam(event, "id"));
@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
   }
 
   if (ev.Enrollment.length <= 0 || ev.Enrollment[0].role !== "Owner") {
-    return jsend.error("Unauthorized");
+    return jsend.fail("Unauthorized");
   }
 
   await prisma.event.delete({

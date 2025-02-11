@@ -1,6 +1,6 @@
 export default defineEventHandler(async (event) => {
   if (!event.context.auth) {
-    return jsend.error("Unauthorized");
+    return jsend.fail("Unauthorized");
   }
 
   const id = Number(getRouterParam(event, "id"));
@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
     return jsend.fail("Event not found");
   }
   if (ev.Enrollment.length <= 0 || ev.Enrollment[0].role !== "Owner") {
-    return jsend.error("Unauthorized");
+    return jsend.fail("Unauthorized");
   }
 
   const updatedEv = await prisma.event.update({

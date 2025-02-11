@@ -1,6 +1,6 @@
 export default defineEventHandler(async (event) => {
   if (!event.context.auth) {
-    return jsend.error("Unauthorized");
+    return jsend.fail("Unauthorized");
   }
 
   const code = String(getRouterParam(event, "code"));

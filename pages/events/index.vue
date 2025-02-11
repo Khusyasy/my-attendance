@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col gap-4 p-4">
     <div class="flex items-center justify-between">
-      <h2 class="text-xl font-bold">Manage Users</h2>
-      <UButton to="">Create User</UButton>
+      <h2 class="text-xl font-bold">Manage Events</h2>
+      <UButton to="events/form">Create Event</UButton>
     </div>
     <UCard>
       <div
@@ -27,13 +27,13 @@
               icon="i-heroicons-trash-20-solid"
               color="red"
               variant="solid"
-              @click="() => console.log('// TODO: Delete', row.id)"
+              @click="onDelete(row.id)"
             />
             <UButton
               icon="i-heroicons-pencil-square-20-solid"
               color="primary"
               variant="solid"
-              @click="() => console.log('// TODO: Edit', row.id)"
+              @click="onEdit(row.id)"
             />
           </UButtonGroup>
         </template>
@@ -43,8 +43,10 @@
 </template>
 
 <script setup lang="ts">
-const { data, status } = useFetch("/api/users");
+const { data, status, refresh } = useFetch("/api/events");
 const datas = computed(() => (data.value ? data.value.data : []));
+
+const router = useRouter();
 
 const columns = [
   {
@@ -52,12 +54,16 @@ const columns = [
     label: "ID",
   },
   {
-    key: "username",
-    label: "Username",
+    key: "name",
+    label: "Name",
   },
   {
-    key: "roleName",
+    key: "role",
     label: "Role",
+  },
+  {
+    key: "code",
+    label: "Code",
   },
   {
     key: "actions",
@@ -66,6 +72,30 @@ const columns = [
 
 // selectable
 const selectedRows = ref<unknown[]>([]);
+
+const onEdit = (id: string) => {
+  router.push(`/events/form?id=${id}`);
+};
+
+const onDelete = async (id: string) => {
+  // TODO: better confirm dialog
+  const ok = confirm("Are you sure you want to delete this event?");
+  if (!ok) {
+    return;
+  }
+
+  const res = await $fetch(`/api/events/${id}`, {
+    method: "DELETE",
+  });
+
+  if (res.status == "fail") {
+    // TODO: better alert
+    alert(res.data);
+    return;
+  }
+
+  refresh();
+};
 
 // filter / search
 const q = ref("");
@@ -83,7 +113,7 @@ const filteredRows = computed(() => {
 
 // pagination
 const page = ref(1);
-const pageCount = 5;
+const pageCount = 10;
 const rows = computed(() => {
   return filteredRows.value.slice(
     (page.value - 1) * pageCount,

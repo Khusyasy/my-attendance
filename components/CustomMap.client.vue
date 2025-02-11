@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="height: 500px; width: 500px">
+    <div style="height: 300px; width: 400px">
       <LMap
         ref="map"
         :zoom="zoom"
@@ -42,19 +42,37 @@
 <script setup lang="ts">
 import L from "leaflet";
 
-const emit = defineEmits(["newPosition"]);
+const props = defineProps({
+  modelValue: {
+    type: Object,
+    required: true,
+  },
+});
+
+const emit = defineEmits(["update:modelValue"]);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const map = ref<any | null>(null);
 const zoom = ref(12);
 
 const pos = ref({
-  lat: 47.21322,
-  long: -1.559482,
-  radius: 500,
+  lat: props.modelValue?.lat,
+  long: props.modelValue?.long,
+  radius: props.modelValue?.radius,
 });
+
 const center = computed<L.PointTuple>(() => [pos.value.lat, pos.value.long]);
 const radius = computed<number>(() => pos.value.radius);
+
+watch(
+  pos,
+  (newPos) => {
+    emit("update:modelValue", newPos);
+  },
+  {
+    deep: true,
+  },
+);
 
 async function onMapReady() {
   const userPos = await getGeolocation();
@@ -93,16 +111,6 @@ async function onMapReady() {
       posCircle.setRadius(newRadius);
     },
     { deep: true },
-  );
-
-  watch(
-    pos,
-    (newPos) => {
-      emit("newPosition", newPos);
-    },
-    {
-      deep: true,
-    },
   );
 }
 </script>
