@@ -55,13 +55,21 @@ const emit = defineEmits(["update:modelValue"]);
 const map = ref<any | null>(null);
 const zoom = ref(12);
 
+const DEFAULT_LAT = 47.21322;
+const DEFAULT_LONG = -1.559482;
+const DEFAULT_RADIUS = 100;
 const pos = ref({
   lat: props.modelValue?.lat,
   long: props.modelValue?.long,
   radius: props.modelValue?.radius,
 });
 
-const center = computed<L.PointTuple>(() => [pos.value.lat, pos.value.long]);
+const center = computed<L.PointTuple>(() => {
+  if (pos.value.lat == null || pos.value.long == null) {
+    return [DEFAULT_LAT, DEFAULT_LONG];
+  }
+  return [pos.value.lat, pos.value.long];
+});
 const radius = computed<number>(() => pos.value.radius);
 
 watch(
@@ -75,12 +83,14 @@ watch(
 );
 
 async function onMapReady() {
-  const userPos = await getGeolocation();
-  pos.value = {
-    lat: userPos.coords.latitude,
-    long: userPos.coords.longitude,
-    radius: userPos.coords.accuracy,
-  };
+  if (pos.value.lat == null || pos.value.long == null) {
+    const userPos = await getGeolocation();
+    pos.value = {
+      lat: userPos.coords.latitude,
+      long: userPos.coords.longitude,
+      radius: DEFAULT_RADIUS,
+    };
+  }
 
   const posMarker = L.marker(center.value).addTo(map.value.leafletObject);
 

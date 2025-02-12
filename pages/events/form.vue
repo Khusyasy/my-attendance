@@ -8,7 +8,9 @@
       />
       <h2 class="text-xl font-bold">{{ editId ? "Edit" : "Create" }} Event</h2>
     </div>
-    <UCard class="w-min bg-white/75 backdrop-blur dark:bg-white/5">
+    <UCard
+      class="w-min min-w-[400px] bg-white/75 backdrop-blur dark:bg-white/5"
+    >
       <UForm
         ref="form"
         :schema="eventsPostSchema"
@@ -22,8 +24,6 @@
           variant="solid"
           :description="errorMessage"
         />
-
-        {{ editId }}
 
         <UFormGroup label="Name" name="name">
           <UInput v-model="state.name" />
@@ -45,17 +45,34 @@ import type { Form, FormSubmitEvent } from "#ui/types";
 const router = useRouter();
 const route = useRoute();
 
-const editId = route.params.id;
-
 const form = ref<Form<EventsPostSchema>>();
-const state = reactive({
+const state = reactive<{
+  name: string | undefined;
+}>({
   name: undefined,
 });
-const pos = reactive({
-  lat: 47.21322,
-  long: -1.559482,
-  radius: 500,
+const pos = ref<{
+  lat: number | null;
+  long: number | null;
+  radius: number | null;
+}>({
+  lat: null,
+  long: null,
+  radius: null,
 });
+
+// only fetch if editing
+const editId = route.query.id ?? null;
+const isEdit = editId !== null;
+const { data: prev } = await useFetch(`/api/events/${editId}`, {
+  immediate: isEdit,
+});
+if (prev.value?.status === "success") {
+  state.name = prev.value.data.name;
+  pos.value.lat = prev.value.data.lat;
+  pos.value.long = prev.value.data.long;
+  pos.value.radius = prev.value.data.radius;
+}
 
 const loading = ref(false);
 const errorMessage = ref<string | null>(null);
@@ -64,16 +81,28 @@ async function onSubmit(event: FormSubmitEvent<EventsPostSchema>) {
   event.preventDefault();
   loading.value = true;
 
-  const res = await $fetch(`/api/events`, {
-    method: "POST",
-    body: {
-      name: event.data.name,
-      lat: pos.lat,
-      long: pos.long,
-      radius: pos.radius,
-    },
-  });
-  // TODO: handle edit
+  let res;
+  if (isEdit) {
+    res = await $fetch(`/api/events/${editId}`, {
+      method: "PUT",
+      body: {
+        name: event.data.name,
+        lat: pos.value.lat,
+        long: pos.value.long,
+        radius: pos.value.radius,
+      },
+    });
+  } else {
+    res = await $fetch(`/api/events`, {
+      method: "POST",
+      body: {
+        name: event.data.name,
+        lat: pos.value.lat,
+        long: pos.value.long,
+        radius: pos.value.radius,
+      },
+    });
+  }
 
   loading.value = false;
 
@@ -89,6 +118,7 @@ async function onSubmit(event: FormSubmitEvent<EventsPostSchema>) {
       );
     }
   } else if (res.status === "success") {
+    // TODO: show toast message
     router.push("/events");
   }
 }
