@@ -1,5 +1,4 @@
 export default defineEventHandler(async (event) => {
-  console.log("event", event.context.auth);
   if (!event.context.auth) {
     return jsend.fail("Unauthorized");
   }

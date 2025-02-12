@@ -62,7 +62,6 @@ async function onSubmit(event: FormSubmitEvent<LoginPostSchema>) {
     errorMessage.value = res.data;
     return;
   } else if (res.status === "success") {
-    console.log(res);
     router.push("/");
   }
 }
